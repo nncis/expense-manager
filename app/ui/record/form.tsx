@@ -1,4 +1,4 @@
-import Link from "next/link";
+// import Link from "next/link";
 import style from '@/ui/record.module.css'
 
 export default function Form() {

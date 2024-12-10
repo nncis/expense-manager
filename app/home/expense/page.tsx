@@ -1,5 +1,9 @@
+import Table from '@/ui/expense/table'
+
 export default function Expense(){
   return (
-      <h1>expenses</h1>
+    <>
+      <Table />
+    </>
   )
 }
