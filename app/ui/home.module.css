@@ -1,8 +1,16 @@
 .home {
   display: flex;
+  justify-content: center;
   flex-direction: row;
-  background-color: aquamarine;
-  margin-left: 200px;
-  /* width: 100vw;
-  height: 100vh; */
+  background-color: white;
+  padding-left: 200px;
+  width: 100vw;
+  height: 100vh;
+}
+
+.mainPage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }

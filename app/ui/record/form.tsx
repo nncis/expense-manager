@@ -1,18 +1,33 @@
 import Link from "next/link";
+import style from '@/ui/record.module.css'
 
 export default function Form() {
 
   const categories: string[] = ["Verduleria", "Carniceria", "Almacen"];
 
   return (
-    <form>
-      <div>
-        <label>
-          Record a expense
-        </label>
+    <form className={style.recordForm}>
+        {/* input name product */}
+        <div className={style.recordFormRow}>
+          <label>
+            Product name:
+          </label>
+          <div>
+            <input
+              id="product-name"
+              className={style.recordFormInput}
+              name="product-name"
+              type="text"
+              placeholder="Enter name product"
+            ></input>
+          </div>
+        </div>
         {/* choose category */}
-        <div>
-          <select>
+        <div className={style.recordFormRow}>
+          <label>
+            Select Category
+          </label>
+          <select className={style.recordFormInput}>
             <option value="" disabled>
               Select Category
             </option>
@@ -21,28 +36,15 @@ export default function Form() {
             ))}
           </select>
         </div>
-        {/* input name product */}
-        <div>
-          <label>
-            Product
-          </label>
-          <div>
-            <input
-              id="product-name"
-              name="product-name"
-              type="text"
-              placeholder="Enter name product"
-            ></input>
-          </div>
-        </div>
         {/* input amount */}
-        <div>
+        <div className={style.recordFormRow}>
           <label htmlFor="">
             Amount
           </label>
           <div>
             <input
               id="amount"
+              className={style.recordFormInput}
               name="amount" 
               type="number"
               placeholder="Enter amount"
@@ -50,15 +52,6 @@ export default function Form() {
               />
           </div>
         </div>
-
-        <button>Submit</button>
-        <Link 
-          href="/home/record"
-        >
-          Cancel
-        </Link>
-      </div>
-
     </form>
   )
 }
