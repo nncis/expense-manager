@@ -2,7 +2,7 @@ import Form from '@/ui/record/form'
 import style from '@/ui/record.module.css'
 import Buttons from '@/ui/record/buttons'
 
-export default function RecordExpense() {
+export default async function RecordExpense() {
 
   return (
     <div className={style.recordPage}>

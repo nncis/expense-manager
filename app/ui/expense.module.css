@@ -1,0 +1,31 @@
+
+.expensePage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.expenseTable {
+  width: 90%;
+  height: 25rem;
+  text-align: left;
+  border: 5px solid #ddd;
+}
+
+.expenseThead {
+  background-color: #ddd;
+}
+
+.expenseTr {
+  padding: 12px 0;
+}
+
+.expenseTh {
+  padding: 12px 0;
+}
+
+.expenseTd {
+  border-bottom: 1px solid #ddd;
+}
