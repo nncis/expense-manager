@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { deleteExpense } from '@/lib/actions';
 
-export function UpdateExpense({ id }: {id: string}){
+export function UpdateExpense({ id }: { id: string }){
   return(
   <Link
     className="rounded-md border p-2 hover:bg-gray-100"
@@ -12,8 +13,13 @@ export function UpdateExpense({ id }: {id: string}){
   )
 };
 
-export function DeleteExpense(){
+export function DeleteExpense({ id }: { id: string }){
+  const deleteExpenseWithId = deleteExpense.bind(null, id)
   return(
-    <TrashIcon className="w-4"></TrashIcon>
+    <form action={deleteExpenseWithId}>
+      <button  type="submit">
+        <TrashIcon className="w-4"></TrashIcon>
+      </button>
+    </form>
   )
 };

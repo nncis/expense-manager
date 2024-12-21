@@ -32,12 +32,12 @@ export default async function Table (
           {expenses?.map((expense, index) => 
             <tr key={index}>
               <td className={style.expenseTd}>{expense.category}</td>
-              <td className={style.expenseTd}>{expense.amount / 100}</td>
+              <td className={style.expenseTd}>$ {expense.amount / 100}</td>
               <td className={style.expenseTd}>{formatDateToLocal(expense.date)}</td>
               <td >
                 <div className="flex justify-end gap-2 whitespace-nowrap text-sm">
                   <UpdateExpense id={expense.id}/>
-                  <DeleteExpense />
+                  <DeleteExpense id={expense.id}/>
                 </div>
               </td>
             </tr>

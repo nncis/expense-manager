@@ -51,3 +51,11 @@ export async function updateExpense(id: string, formData: FormData) {
   revalidatePath('/home/expense');
   redirect('/home/expense');
 };
+
+export async function deleteExpense(id: string) {
+  await sql `
+    DELETE FROM expenses 
+    WHERE id = ${id}
+  `;
+  revalidatePath('/home/expense');
+}
