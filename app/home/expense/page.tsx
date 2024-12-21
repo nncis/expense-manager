@@ -18,9 +18,9 @@ export default async function Expense(props: {
 
   return (
     <div className={style.expensePage}>
-      <p>{user}</p>
+      {/* <p>{user}</p>
       <p>{query}</p>
-      <p>{currentPage}</p>
+      <p>{currentPage}</p> */}
       <Table user={user} query={query} currentPage={currentPage} />
     </div>
   )

@@ -1,34 +1,41 @@
 // import Link from "next/link";
 import style from '@/ui/record.module.css'
+import { createExpense } from '@/lib/actions';
+import Buttons from './buttons';
 
 export default function Form() {
 
-  const categories: string[] = ["Verduleria", "Carniceria", "Almacen"];
+  const categories: string[] = ["Greengrocery", "Bakery", "Grocery", "Butcher Shop", "Barber Shop", "Clothing Store"];
 
   return (
-    <form className={style.recordForm}>
-        {/* input name product */}
+    <form className={style.recordForm} action={createExpense}>
+        {/* input name product
         <div className={style.recordFormRow}>
           <label>
             Product name:
           </label>
           <div>
             <input
-              id="product-name"
+              id="productName"
               className={style.recordFormInput}
-              name="product-name"
+              name="productName"
               type="text"
               placeholder="Enter name product"
             ></input>
           </div>
-        </div>
+        </div> */}
         {/* choose category */}
         <div className={style.recordFormRow}>
           <label>
             Select Category
           </label>
-          <select className={style.recordFormInput}>
-            <option value="" disabled>
+          <select 
+            className={style.recordFormInput}
+            id='category'
+            name='category'
+            defaultValue=''
+          >
+            <option value='' disabled>
               Select Category
             </option>
             {categories.map((category, index) => (
@@ -52,6 +59,7 @@ export default function Form() {
               />
           </div>
         </div>
+        <Buttons></Buttons>
     </form>
   )
 }
