@@ -16,7 +16,9 @@ export function UpdateExpense({ id }: { id: string }){
 export function DeleteExpense({ id }: { id: string }){
   const deleteExpenseWithId = deleteExpense.bind(null, id)
   return(
-    <form action={deleteExpenseWithId}>
+    <form 
+      action={deleteExpenseWithId}
+    >
       <button  type="submit">
         <TrashIcon className="w-4"></TrashIcon>
       </button>

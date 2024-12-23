@@ -38,8 +38,8 @@ export async function fetchExpenseById(id: string) {
     }));
     
     return expenses[0];
+
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch expenses.');
   }
 };

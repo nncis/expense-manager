@@ -1,14 +1,19 @@
 // import Link from "next/link";
+'use client'
+
 import style from '@/ui/record.module.css'
-import { createExpense } from '@/lib/actions';
+import { createExpense, State } from '@/lib/actions';
 import Buttons from './buttons';
+import { useActionState } from 'react';
 
 export default function Form() {
+  const initialState: State = { message: null, errors: {} };
+  const [state, formAction] = useActionState(createExpense, initialState)
 
   const categories: string[] = ["Greengrocery", "Bakery", "Grocery", "Butcher Shop", "Barber Shop", "Clothing Store"];
 
   return (
-    <form className={style.recordForm} action={createExpense}>
+    <form className={style.recordForm} action={formAction}>
         {/* input name product
         <div className={style.recordFormRow}>
           <label>
@@ -34,6 +39,7 @@ export default function Form() {
             id='category'
             name='category'
             defaultValue=''
+            aria-describedby="expense-error"
           >
             <option value='' disabled>
               Select Category
@@ -42,6 +48,13 @@ export default function Form() {
               <option key={index} value={category}>{category}</option>
             ))}
           </select>
+        </div>
+        {/* show category error message */}
+        <div id='category-error' aria-live="polite" aria-atomic="true">
+            {state.errors?.category &&
+              state.errors.category.map((error: string) => 
+              <p className="mt-2 text-sm text-red-500" key={error}>{error}</p>
+              )}
         </div>
         {/* input amount */}
         <div className={style.recordFormRow}>
@@ -58,6 +71,13 @@ export default function Form() {
               step="0.01"
               />
           </div>
+        </div>
+        {/* show amount error message */}
+        <div id='amount-error' aria-live="polite" aria-atomic="true">
+          {state.errors?.amount &&
+            state.errors.amount.map((error: string) =>
+            <p className="mt-2 text-sm text-red-500" key={error}>{error}</p>
+            )}
         </div>
         <Buttons></Buttons>
     </form>
