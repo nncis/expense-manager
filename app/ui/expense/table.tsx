@@ -3,21 +3,21 @@ import { formatDateToLocal } from '@/lib/utils';
 import style from '@/ui/expense.module.css';
 import { UpdateExpense, DeleteExpense } from '@/ui/expense/buttons';
 
-
 export default async function Table (
-  {
-    user,
-    query, 
-    currentPage
-  }:
-  {
-    user: string,
-    query: string, 
-    currentPage: number
-  }
+  // {
+  //   user,
+  //   query, 
+  //   currentPage
+  // }:
+  // {
+  //   user: string,
+  //   query: string, 
+  //   currentPage: number
+  // }
 ) {
-  const expenses = await fetchFilteredExpenses(user, query, currentPage);
-  
+
+const expenses = await fetchFilteredExpenses();
+
   return (
       <table className={style.expenseTable}>
         <thead className={style.expenseThead}>

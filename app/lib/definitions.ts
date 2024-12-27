@@ -21,4 +21,8 @@ export type ExpenseForm = {
   user_id: string;
 };
 
+export type UserSession = {
+  name: string,
+  email: string,
+}
 

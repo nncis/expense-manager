@@ -1,21 +1,33 @@
 import { sql } from '@vercel/postgres';
 import { Expense, ExpenseForm } from '@/lib/definitions';
+import { auth } from '../../auth';
+
 
 const lucyId = 'd6e15727-9fe1-4961-8c5b-ea44a9bd81aa'
 const ITEMS_PER_PAGE = 6;
 
-export async function fetchFilteredExpenses(user: string, query: string, currentPage: number) {
-  try {
-    const expenses = await sql<Expense> `
-    SELECT * 
-    FROM expenses 
-    WHERE user_id = ${lucyId}
-    ORDER BY date DESC
-    `;
-    return expenses.rows
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch revenue data.');
+export async function fetchFilteredExpenses() {
+
+  const session = await auth();
+  const user = session?.user;
+
+  if(user){
+    try {
+      const expenses = await sql<Expense> `
+      SELECT expenses.*
+      FROM users
+      INNER JOIN expenses
+      ON users.id = expenses.user_id 
+      WHERE users.email = ${user.email}
+      ORDER BY date DESC
+      `;
+      return expenses.rows
+    } catch (error) {
+      console.error('Database Error:', error);
+      throw new Error('Failed to fetch revenue data.');
+    }
+  } else {
+    throw new Error('Not authenticated');
   }
 };
 

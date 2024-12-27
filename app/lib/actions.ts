@@ -5,6 +5,9 @@ import { sql } from '@vercel/postgres';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 
+import { signIn, auth } from '../../auth';
+import { AuthError } from 'next-auth';
+
 const FormSchema = z.object({
   id: z.string(),
   category: z.string({
@@ -42,19 +45,30 @@ export async function createExpense(prevState: State, formData: FormData) {
     };
   };
 
+  
+  
   // Prepare data for insertion into the database
   const { category, amount } = validatedFields.data;
   const amountInCents = amount * 100;
   const date = new Date().toISOString().split('T')[0];
-
-   // Insert data into the database
-  try {
-    await sql `
-      INSERT INTO expenses (category, amount, date, user_id)
-      VALUES(${category}, ${amountInCents}, ${date}, 'd6e15727-9fe1-4961-8c5b-ea44a9bd81aa')
-    `;
-  } catch (error) {
-    return { message: 'Database Error: Failed to Create Expense.'}
+  
+  //authenticate user
+  
+  const session = await auth();
+  const user = session?.user;
+  
+  // Insert data into the database
+  if(user){
+    try {
+      await sql `
+        INSERT INTO expenses (category, amount, date, user_id)
+        VALUES(${category}, ${amountInCents}, ${date}, (SELECT id FROM users WHERE email = ${user.email}))
+      `;
+    } catch (error) {
+      return { message: 'Database Error: Failed to Create Expense.'}
+    }
+  } else {
+    throw new Error('Not Authenticate.');
   }
   // Revalidate the cache for the invoices page and redirect the user.
   revalidatePath('/home/record');
@@ -83,15 +97,25 @@ export async function updateExpense(id: string, prevState: State, formData: Form
   const { category, amount, date } = validatedFields.data;
   const amountInCents = amount * 100;
 
+   //authenticate user
+  
+   const session = await auth();
+   const user = session?.user;
+
   // Insert data into the database
-  try {
-    await sql `
-      UPDATE expenses
-      SET category = ${category}, amount = ${amountInCents}, date = ${date}
-      WHERE id = ${id}
-    `;
-  } catch (error) {
-    return { message: 'Database Error: Failed to Update Expense.'};
+
+  if(user){
+    try {
+      await sql `
+        UPDATE expenses
+        SET category = ${category}, amount = ${amountInCents}, date = ${date}
+        WHERE id = ${id}
+      `;
+    } catch (error) {
+      return { message: 'Database Error: Failed to Update Expense.'};
+    }
+  } else {
+    throw new Error('Not Authenticate.');
   }
   revalidatePath('/home/expense');
   redirect('/home/expense');
@@ -106,5 +130,24 @@ export async function deleteExpense(id: string) {
   } catch (error) {
     // return { message: 'Database Error: Failed to Delete Expense.' };
     console.log('Database Error: Failed to Delete Expense.', error)
+  }
+}
+
+export async function authenticate(
+  prevState: string | undefined,
+  formData: FormData,
+) {
+  try {
+    await signIn('credentials', formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return 'Invalid credentials.';
+        default:
+          return 'Something went wrong.';
+      }
+    }
+    throw error;
   }
 }
