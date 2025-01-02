@@ -11,15 +11,10 @@ export default function LoginForm(){
     undefined,
   );
 
-
   return(
     <form action={formAction}>
       <h1>Please log in to continue.</h1>
-      <label
-        htmlFor="email"
-      >
-        Email
-      </label>
+      <label htmlFor="email">Email</label>
       <input
         id="email"
         type="email"
@@ -28,11 +23,7 @@ export default function LoginForm(){
         required
       >
       </input>
-      <label
-        htmlFor="password"
-      >
-        Password
-      </label>
+      <label htmlFor="password">Password</label>
       <input
         id="password"
         type="password"
@@ -42,9 +33,7 @@ export default function LoginForm(){
         minLength={6}
       >
       </input>
-      <Button className="mt-4 w-full" aria-disabled={isPending}>
-          Log in
-        </Button>
+      <Button className="mt-4 w-full" aria-disabled={isPending}>Log in</Button>
         <div
           className="flex h-8 items-end space-x-1"
           aria-live="polite"

@@ -1,3 +1,4 @@
+//NEED TO REFACTOR
 'use server';
 
 import { z } from 'zod';
@@ -7,6 +8,9 @@ import { revalidatePath } from 'next/cache';
 
 import { signIn, auth } from '../../auth';
 import { AuthError } from 'next-auth';
+import bcrypt from 'bcrypt'
+
+//Auth Schema and State
 
 const FormSchema = z.object({
   id: z.string(),
@@ -28,6 +32,31 @@ export type State = {
   message?: string | null;
 };
 
+//Sing Up Schema and State
+const SignupFormSchema = z.object({
+  name: z
+    .string()
+    .min(2, { message: 'Name must be at least 2 characters long.' })
+    .trim(),
+  email: z.string().email({ message: 'Please enter a valid email.' }).trim(),
+  password: z
+    .string()
+    .min(8, { message: 'Be at least 8 characters long' })
+    .regex(/[a-zA-Z]/, { message: 'Contain at least one letter.' })
+    .regex(/[0-9]/, { message: 'Contain at least one number.' })
+    .regex(/[^a-zA-Z0-9]/, {
+      message: 'Contain at least one special character.',
+    })
+    .trim(),
+})
+
+export type FormState = { 
+  errors: { 
+    name?: string[]; 
+    email?: string[]; 
+    password?: string[] 
+  }};
+
 const CreateExpense = FormSchema.omit({ id: true, date: true });
 
 export async function createExpense(prevState: State, formData: FormData) {
@@ -45,8 +74,6 @@ export async function createExpense(prevState: State, formData: FormData) {
     };
   };
 
-  
-  
   // Prepare data for insertion into the database
   const { category, amount } = validatedFields.data;
   const amountInCents = amount * 100;
@@ -131,7 +158,7 @@ export async function deleteExpense(id: string) {
     // return { message: 'Database Error: Failed to Delete Expense.' };
     console.log('Database Error: Failed to Delete Expense.', error)
   }
-}
+};
 
 export async function authenticate(
   prevState: string | undefined,
@@ -150,4 +177,37 @@ export async function authenticate(
     }
     throw error;
   }
-}
+};
+
+export async function signup( prevState: FormState | undefined, formData: FormData) {
+
+    //1. Validate form fields
+    const validatedFields = SignupFormSchema.safeParse({
+      name: formData.get('name'),
+      email: formData.get('email'),
+      password: formData.get('password'),
+    })
+
+    // 2. Prepare data for insertion into database
+
+      // If any form fields are invalid, return early
+    if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+    }}
+
+  // 3. Insert the user into the database
+  const { name, email, password } = validatedFields.data;
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  try {
+    await sql `
+      INSERT INTO users(name, email, password)
+      VALUES(${name}, ${email}, ${hashedPassword})
+    `;
+  } catch(error){
+    console.log(error)
+  }
+  revalidatePath('/signup');
+  redirect('/home');
+};
