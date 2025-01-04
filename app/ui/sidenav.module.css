@@ -72,13 +72,13 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
   background-color: var(--background-component);
   width: 22rem;
   height: 5rem;
   border-radius: 10px;
   border: none;
   color: var(--font-color-tertiary);
-  padding-left: 1rem;
   cursor: pointer;
 }
 
@@ -106,11 +106,13 @@
 
 @media (max-width: 700px) {
   .nav {
+    display: grid;
+    justify-items: center;
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     position: relative;
     width: 100%;
     height: 20rem;
-    justify-content: normal;
-    align-items: normal;
     padding: 0;
     margin-bottom: 5rem;
   }
@@ -122,8 +124,8 @@
   .sidenav{
     flex-direction: row;
     justify-content: center;
-    height: 30rem;
-    width: 80%;
+    width: 100%;
+    grid-area: 2/ 1/ 3/ 4;
   }
 
   .sidenav a {
@@ -134,12 +136,9 @@
   }
 
   .signOut {
-    position: absolute;
     width: 7rem;
-    height: 6.1rem;
-    top: 101;
-    left: 80%;
-    padding-left: 1.7rem;
+    height: 6.1rem;;
+    grid-area: 2/ 4/3 /5;
   }
 
   .sidenav p, .signOut p {
@@ -147,9 +146,10 @@
   }
 
   .logo {
-    height: 30rem;
+    height: 10rem;
     width: 97%;
     margin: 1rem;
+    grid-area: 1/1 /2 /5;
   }
 
   .icon{

@@ -87,4 +87,8 @@
     height: 5rem;
     width: 10rem;
   }
+
+  .recordForm {
+    padding: 0;
+  }
 }

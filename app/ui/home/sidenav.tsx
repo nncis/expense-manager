@@ -18,7 +18,6 @@ export default function SideNav() {
         }}
       >
       <div className={style.blankSpace}>
-
       </div>
         <button className={style.signOut}>
           <PowerIcon width={30}/>
