@@ -35,7 +35,6 @@ export default function Form() {
             Select Category
           </label>
           <select 
-            className={style.recordFormInput}
             id='category'
             name='category'
             defaultValue=''
@@ -64,7 +63,6 @@ export default function Form() {
           <div>
             <input
               id="amount"
-              className={style.recordFormInput}
               name="amount" 
               type="number"
               placeholder="Enter amount"

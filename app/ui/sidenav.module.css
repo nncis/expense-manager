@@ -1,34 +1,158 @@
+.nav {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  justify-self: center;
+  height: 100%;
+  width: 25rem;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: var(--foreground);
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
 .sidenav {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  justify-self: center;
-  height: 100%;
-  width: 200px;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  background-color: lightblue;
-  overflow-x: hidden;
-  padding-top: 20px;
+  align-content: center;
+  width: 25rem;
+}
+
+.logo {
+  width: 22rem;
+  height: 13rem;
+  background-color: var(--background);
+  border-radius: 10px;
+}
+
+.sidenav a {
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: 500;
 }
 
 .link {
   display: flex;
   align-items: center;
-  width: 8rem;
-  height: 3rem;
+  width: 80%;
+  height: 5rem;
   padding-left: 15px;
   margin: 5px 0;
+  background-color: var(--background-component);
+  border-radius: 10px;
+  color: var(--font-color-tertiary);
+}
+
+.link:hover {
+  color: var(--active-secondary);
+  background-color: var(--active-tertiary);
 }
 
 .linkActive {
-  background-color: whitesmoke;
-  color: blue;
+  color: var(--active-secondary);
+  background-color: var(--active-tertiary);
+}
+
+.signOutContainer {
+  display: contents;
+  width: 20rem;
+  height: 10rem;
 }
 
 .navTitle {
+  margin-left: 1rem;
+}
+
+.signOut {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: var(--background-component);
+  width: 22rem;
+  height: 5rem;
+  border-radius: 10px;
+  border: none;
+  color: var(--font-color-tertiary);
+  padding-left: 1rem;
+  cursor: pointer;
+}
+
+.signOut:hover {
+  background-color: var(--active-tertiary);
+  color: var(--active-secondary);
+}
+
+.signOut p {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-left: 1rem;
+}
+
+.blankSpace {
+  width: 22rem;
+  height: 48%;
+  background-color: var(--background-component);
+  border-radius: 10px;
+}
+
+.icon{
+  width: 3rem;
+}
+
+@media (max-width: 700px) {
+  .nav {
+    position: relative;
+    width: 100%;
+    height: 20rem;
+    justify-content: normal;
+    align-items: normal;
+    padding: 0;
+    margin-bottom: 5rem;
+  }
   
+  .blankSpace {
+    display: none;
+  }
+
+  .sidenav{
+    flex-direction: row;
+    justify-content: center;
+    height: 30rem;
+    width: 80%;
+  }
+
+  .sidenav a {
+    padding: 0;
+    margin: 0 1.5rem;
+    justify-content: center;
+    height: 6rem;
+  }
+
+  .signOut {
+    position: absolute;
+    width: 7rem;
+    height: 6.1rem;
+    top: 101;
+    left: 80%;
+    padding-left: 1.7rem;
+  }
+
+  .sidenav p, .signOut p {
+    display: none;
+  }
+
+  .logo {
+    height: 30rem;
+    width: 97%;
+    margin: 1rem;
+  }
+
+  .icon{
+    width: 3rem;
+  }
 }

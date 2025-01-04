@@ -1,26 +1,30 @@
 import style from '@/ui/sidenav.module.css';
 import NavLinks from './nav-links';
 import { signOut } from '../../../auth';
-import { PowerIcon } from '@heroicons/react/24/outline';
+import { PowerIcon,  } from '@heroicons/react/24/outline';
 
-export default function SideNav(){
+export default function SideNav() {
   return (
-    <>
-    <nav className={style.sidenav}>
-      <NavLinks />
-    </nav>
-    <form
-          action={async () => {
-            'use server';
-            await signOut();
-          }}
-        >
-          <button className="flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
-            <PowerIcon className="w-6" />
-            <div className="hidden md:block">Sign Out</div>
-          </button>
-        </form>
-    </>
-    
+    <div className={style.nav}>
+      <div className={style.logo}></div>
+      <nav className={style.sidenav}>
+        <NavLinks />
+      </nav>
+      <form
+        className={style.signOutContainer}
+        action={async () => {
+          'use server';
+          await signOut();
+        }}
+      >
+      <div className={style.blankSpace}>
+
+      </div>
+        <button className={style.signOut}>
+          <PowerIcon width={30}/>
+          <p>Sign Out</p>
+        </button>
+      </form>
+    </div>
   )
 } 
