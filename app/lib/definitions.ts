@@ -13,6 +13,14 @@ export type Expense = {
   userId: string
 };
 
+export type ExpenseProp = {
+  id: string,
+  category: string,
+  amount: number,
+  date: string,
+  userId: string
+}
+
 export type ExpenseForm = {
   id: string;
   category: string,
@@ -26,5 +34,7 @@ export type UserSession = {
   email: string,
 };
 
-
+export const categories: string[] = [
+  "Greengrocery", "Bakery", "Grocery", "Butcher Shop", "Barber Shop", "Clothing Store"
+]
 

@@ -1,14 +1,15 @@
 import Link from 'next/link';
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { deleteExpense } from '@/lib/actions';
+import style from '@/ui/expense.module.css';
 
 export function UpdateExpense({ id }: { id: string }){
   return(
   <Link
-    className="rounded-md border p-2 hover:bg-gray-100"
     href={`/home/expense/${id}/edit`}
+    className={style.btn}
   >
-    <PencilIcon className="w-5"/>
+    <PencilIcon width={20}/>
   </Link>
   )
 };
@@ -18,9 +19,12 @@ export function DeleteExpense({ id }: { id: string }){
   return(
     <form 
       action={deleteExpenseWithId}
-    >
-      <button  type="submit">
-        <TrashIcon className="w-4"></TrashIcon>
+      >
+      <button  type="submit"
+      className={style.btn}
+      
+      >
+        <TrashIcon width={20}></TrashIcon>
       </button>
     </form>
   )

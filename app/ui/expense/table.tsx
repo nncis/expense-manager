@@ -4,38 +4,37 @@ import style from '@/ui/expense.module.css';
 import { UpdateExpense, DeleteExpense } from '@/ui/expense/buttons';
 
 export default async function Table (
-  // {
-  //   user,
-  //   query, 
-  //   currentPage
-  // }:
-  // {
-  //   user: string,
-  //   query: string, 
-  //   currentPage: number
-  // }
+  {
+    query, 
+    currentPage,
+  }:
+  {
+    query: string, 
+    currentPage: number;
+  }
 ) {
 
-const expenses = await fetchFilteredExpenses();
+const expenses = await fetchFilteredExpenses(query, currentPage);
 
   return (
+    <>
       <table className={style.expenseTable}>
-        <thead className={style.expenseThead}>
-          <tr className={style.expenseTr}>
-            <th className={style.expenseTh}>Category</th>
-            <th className={style.expenseTh}>Amount</th>
-            <th className={style.expenseTh}>Date</th>
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Date</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
           {expenses?.map((expense, index) => 
             <tr key={index}>
-              <td className={style.expenseTd}>{expense.category}</td>
-              <td className={style.expenseTd}>$ {expense.amount / 100}</td>
-              <td className={style.expenseTd}>{formatDateToLocal(expense.date)}</td>
+              <td>{expense.category}</td>
+              <td>$ {expense.amount / 100}</td>
+              <td>{formatDateToLocal(expense.date)}</td>
               <td>
-                <div className="flex justify-end gap-2 whitespace-nowrap text-sm">
+                <div className={style.expenseButtons}>
                   <UpdateExpense id={expense.id}/>
                   <DeleteExpense id={expense.id}/>
                 </div>
@@ -44,5 +43,21 @@ const expenses = await fetchFilteredExpenses();
           )}
         </tbody>
       </table>
+      <div className={style.mobileDisplay}>
+          {expenses?.map((expense, index) => 
+            <div className={style.expenseMobile} key={index}>
+              <div className={style.expenseMobileContent}>
+                <h3>{expense.category}</h3>
+                <p>${expense.amount / 100}</p>
+                <p>{formatDateToLocal(expense.date)}</p>
+              </div>
+              <div className={style.expenseButtons}>
+                <UpdateExpense id={expense.id}/>
+                <DeleteExpense id={expense.id}/>
+              </div>
+            </div>
+          )}
+      </div>
+    </>
   )
 }

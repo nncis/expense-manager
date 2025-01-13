@@ -5,12 +5,11 @@ import style from '@/ui/record.module.css'
 import { createExpense, State } from '@/lib/actions';
 import Buttons from './buttons';
 import { useActionState } from 'react';
+import { categories } from '@/lib/definitions';
 
 export default function Form() {
   const initialState: State = { message: null, errors: {} };
   const [state, formAction] = useActionState(createExpense, initialState)
-
-  const categories: string[] = ["Greengrocery", "Bakery", "Grocery", "Butcher Shop", "Barber Shop", "Clothing Store"];
 
   return (
     <form className={style.recordForm} action={formAction}>

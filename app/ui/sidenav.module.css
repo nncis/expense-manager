@@ -72,7 +72,6 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
   background-color: var(--background-component);
   width: 22rem;
   height: 5rem;
@@ -80,6 +79,7 @@
   border: none;
   color: var(--font-color-tertiary);
   cursor: pointer;
+  padding-left: 1.5rem;
 }
 
 .signOut:hover {
@@ -114,7 +114,6 @@
     width: 100%;
     height: 20rem;
     padding: 0;
-    margin-bottom: 5rem;
   }
   
   .blankSpace {
