@@ -39,7 +39,7 @@ export default function WeekGraph({ weekExpenses }: GraphProp) {
     const color = d3.scaleOrdinal(d3.schemePastel1);
     
     const arc = d3.arc<d3.PieArcDatum<WeekExpenseAmount>>()
-      .innerRadius(0)
+      .innerRadius(radius * 0.5)
       .outerRadius(radius);
 
     const pie = d3.pie<WeekExpenseAmount>()
