@@ -33,7 +33,7 @@ export const categories: string[] = [
 export type WeekExpense = {
   category: string;
   amount: number;
-  date: string;
+  date: Date;
 }
 
 export type WeekExpenseAmount = {
