@@ -44,3 +44,11 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
     totalPages,
   ];
 };
+
+export const getPreviousSunday = (date: string) => {
+  const givenDate = new Date(date); // Asegúrate de trabajar con un objeto Date
+  const dayOfWeek = givenDate.getDay(); // Obtiene el día de la semana (0 para domingo, 6 para sábado)
+  const daysToSubtract = dayOfWeek; // Días para retroceder hasta el domingo anterior
+  givenDate.setDate(givenDate.getDate() - daysToSubtract); // Retrocede los días necesarios
+  return givenDate; // Devuelve la nueva fecha
+}

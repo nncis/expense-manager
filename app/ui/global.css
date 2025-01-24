@@ -19,11 +19,10 @@
 }
 
 html {
-	box-sizing: border-box;
-
-	/* Set font size for easy rem calculations
-   * default document font size = 16px, 1rem = 16px, 100% = 16px
-   * (100% / 16px) * 10 = 62.5%, 1rem = 10px, 62.5% = 10px
+  box-sizing: border-box;
+  /* Set font size for easy rem calculations
+  * default document font size = 16px, 1rem = 16px, 100% = 16px
+  * (100% / 16px) * 10 = 62.5%, 1rem = 10px, 62.5% = 10px
   */
 	font-size: 62.5%;
 }
@@ -33,6 +32,7 @@ body {
   font-size: 1rem;
   width: 100vw;
 	height: 100vh;
+  overflow: hidden; 
 }
 
 @media (max-width: 700px) {

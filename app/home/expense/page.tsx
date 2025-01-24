@@ -16,6 +16,7 @@ export default async function Expense(props:{
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
   const totalPages = await fetchExpensePages(query);
+  
 
   return (
     <div className={style.expensePage}>

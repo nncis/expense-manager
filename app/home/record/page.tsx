@@ -7,7 +7,6 @@ export default async function Page() {
 
   return (
     <main className={style.recordPage}>
-      <h1>Record a Expense</h1>
       <Form />
     </main>
   )
