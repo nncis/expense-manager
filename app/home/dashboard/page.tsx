@@ -8,6 +8,7 @@ import WeekTotalAmount from '@/ui/dashboard/WeekTotalAmount';
 export default async function Page(){
   
   const weekExpenses: WeekExpense[] = await getWeekExpenses();
+  console.log(typeof(weekExpenses[0].date),'weekexpenses')
 
   return (
     <div className={style.dashboard}>

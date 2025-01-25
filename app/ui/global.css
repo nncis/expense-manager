@@ -32,7 +32,6 @@ body {
   font-size: 1rem;
   width: 100vw;
 	height: 100vh;
-  overflow: hidden; 
 }
 
 @media (max-width: 700px) {

@@ -11,7 +11,7 @@ interface GraphProp {
 export default function WeekGraph({ weekExpenses }: GraphProp) {
 
   const chartRef = useRef<SVGSVGElement | null>(null);
-  const [dimensions, setDimensions] = useState({ width: 600, height: 400 });
+  const [dimensions, setDimensions] = useState({ width: 600, height: 600 });
 
   useEffect(() => {
     const handleResize = () => {
