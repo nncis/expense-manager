@@ -1,24 +1,25 @@
 
 import style from '@/ui/dashboard.module.css';
-import { getWeekExpenses } from "@/lib/data";
-import WeekGraph from '@/ui/dashboard/WeekGraph';
-import { WeekExpense } from '@/lib/definitions';
-import WeekTotalAmount from '@/ui/dashboard/WeekTotalAmount';
 
-export default async function Page(){
+import WeekTotalAmount from '@/ui/dashboard/WeekTotalAmount';
+import ExpensePieChart from '@/ui/dashboard/ExpensePieChart';
+
+import { getWeekExpenses, getMonthExpenses } from "@/lib/data";
+
+export default async function Page({ searchParams }: { searchParams: Promise<{ view?: string }> }){
+
   
-  const weekExpenses: WeekExpense[] = await getWeekExpenses();
-  console.log(typeof(weekExpenses[0].date),'weekexpenses')
+  const view =  (await searchParams)?.view || "month";
+  
+  const data = view === 'week' ? await getWeekExpenses() : await getMonthExpenses(); 
+  
+      // const monthExpenses: ExpenseByDate[] = await getMonthExpenses();
+      // const weekExpenses: ExpenseByDate[] = await getWeekExpenses();
 
   return (
     <div className={style.dashboard}>
         <WeekTotalAmount />
-      <div className={style.weekExpensesGraph}>
-        <WeekGraph weekExpenses={weekExpenses}/>
-      </div>
-      <div>
-        
-      </div>
+      <ExpensePieChart data={data} view={view}/>
     </div>
   )
 }

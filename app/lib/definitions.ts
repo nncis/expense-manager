@@ -30,13 +30,13 @@ export const categories: string[] = [
   "Greengrocery", "Bakery", "Grocery", "Butcher Shop", "Barber Shop", "Clothing Store"
 ];
 
-export type WeekExpense = {
+export type ExpenseByDate = {
   category: string;
   amount: number;
   date: Date;
 }
 
-export type WeekExpenseAmount = {
+export type ExpenseAmountByDate = {
   category: string;
   amount: number;
 }

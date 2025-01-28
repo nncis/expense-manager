@@ -1,5 +1,5 @@
 import { sql } from '@vercel/postgres';
-import { Expense, ExpenseForm, WeekExpense } from '@/lib/definitions';
+import { Expense, ExpenseForm, ExpenseByDate } from '@/lib/definitions';
 import { auth } from '../../auth';
 
 const ITEMS_PER_PAGE = 6;
@@ -91,7 +91,7 @@ export async function fetchExpensePages(query: string) {
   }
 }
 
-export async function getWeekExpenses(): Promise<WeekExpense[]> {
+export async function getWeekExpenses(): Promise<ExpenseByDate[]> {
   const session = await auth();
   const user = session?.user;
 
@@ -100,7 +100,7 @@ export async function getWeekExpenses(): Promise<WeekExpense[]> {
   }
 
   try {
-    const data = await sql<WeekExpense>`
+    const data = await sql<ExpenseByDate>`
       WITH last_date AS (
         SELECT 
           MAX(expenses.date) AS max_date,
@@ -171,11 +171,99 @@ export async function getTotalWeekAmountExpenses() {
         SELECT max_date FROM last_date
       );
     `
-    
+
     return data.rows[0].total_amount / 100
-  } catch(error) {
+  } catch (error) {
     console.error('Database Error:');
     throw new Error('Failed to fetch total week amount expenses');
   }
 
+}
+
+export async function getMonthExpenses(): Promise<ExpenseByDate[]> {
+  const session = await auth();
+  const user = session?.user;
+
+  if (!user) {
+    throw new Error('User is not authenticated');
+  }
+
+  try {
+    const data = await sql<ExpenseByDate>`
+      WITH last_date AS (
+        SELECT 
+        MAX(expenses.date) AS max_date,
+        DATE_TRUNC('month', MAX(expenses.date)) AS first_day_of_month
+        FROM expenses
+      )
+      SELECT 
+        expenses.category,
+        expenses.amount,
+        expenses.date
+      FROM users
+      INNER JOIN expenses
+      ON users.id = expenses.user_id
+      WHERE 
+        users.email = ${user.email} AND 
+        expenses.date BETWEEN (
+      SELECT first_day_of_month FROM last_date
+      ) AND (
+      SELECT max_date FROM last_date
+      );
+    `
+
+    if (!data.rows.length) {
+      console.warn('No expenses found for the current week');
+      return [];
+    }
+
+    const convertCentsToDollars = (amountInCents: number) => amountInCents / 100;
+
+    const monthExpenses = data.rows.map((expense) => ({
+      ...expense,
+      amount: convertCentsToDollars(expense.amount),
+    }));
+
+    return monthExpenses;
+
+  } catch (error) {
+    console.error('Database Error:');
+    throw new Error('Failed to fetch total month expenses');
+  }
+}
+
+export async function getTotalMonthAmountExpenses() {
+  const session = await auth();
+  const user = session?.user;
+
+  if (!user) {
+    throw new Error('User is not authenticated');
+  }
+
+  try {
+    const data = await sql`
+    WITH last_date AS (
+      SELECT
+      MAX(expenses.date) AS max_date,
+      DATE_TRUNC('month', MAX(expenses.date)) AS first_day_of_month
+      FROM expenses
+    )
+    SELECT
+    SUM(expenses.amount) AS total_amount
+    FROM users
+    INNER JOIN expenses
+    ON users.id = expenses.user_id
+    WHERE
+      users.email = ${user.email} AND 
+      expenses.date BETWEEN (
+    SELECT first_day_of_month FROM last_date
+    ) AND (
+    SELECT max_date FROM last_date
+    );
+    `
+    return data.rows[0].total_amount / 100
+  } catch (error) {
+    console.error('Database Error:');
+    throw new Error('Failed to fetch total month amount expenses');
+  }
 }

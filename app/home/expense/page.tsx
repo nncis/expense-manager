@@ -4,7 +4,6 @@ import Search from '@/ui/expense/search';
 import Pagination from '@/ui/expense/pagination';
 import { fetchExpensePages } from '@/lib/data'
 
-//
 export default async function Expense(props:{
   searchParams?: Promise<{
     query?: string;

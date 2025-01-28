@@ -2,13 +2,14 @@
 
 import * as d3 from "d3";
 import React, { useEffect, useRef, useState } from 'react';
-import { WeekExpense, WeekExpenseAmount } from '@/lib/definitions';
+import { ExpenseByDate, ExpenseAmountByDate } from '@/lib/definitions';
+import style from '@/ui/dashboard.module.css';
 
 interface GraphProp {
-  weekExpenses: WeekExpense[];
+  data: ExpenseByDate[];
 }
 
-export default function WeekGraph({ weekExpenses }: GraphProp) {
+export default function WeekGraph({ data }: GraphProp) {
 
   const chartRef = useRef<SVGSVGElement | null>(null);
   const [dimensions, setDimensions] = useState({ width: 600, height: 600 });
@@ -38,11 +39,11 @@ export default function WeekGraph({ weekExpenses }: GraphProp) {
 
     const color = d3.scaleOrdinal(d3.schemePastel1);
     
-    const arc = d3.arc<d3.PieArcDatum<WeekExpenseAmount>>()
+    const arc = d3.arc<d3.PieArcDatum<ExpenseAmountByDate>>()
       .innerRadius(radius * 0.5)
       .outerRadius(radius);
 
-    const pie = d3.pie<WeekExpenseAmount>()
+    const pie = d3.pie<ExpenseAmountByDate>()
       .value(d => d.amount);
 
     if (!chartRef.current) return;
@@ -55,8 +56,8 @@ export default function WeekGraph({ weekExpenses }: GraphProp) {
     //ex: category: {Category: "Greengrocery", amount: 3000}, {Category: "Greengrocery", amount: 5000}
     //result = {Category: "Greengrocery", amount: 8000};
 
-    const data: WeekExpenseAmount[] = Object.values(
-      weekExpenses.reduce<Record<string, WeekExpenseAmount>>((acc, item) => {
+    const dataResult: ExpenseAmountByDate[] = Object.values(
+      data.reduce<Record<string, ExpenseAmountByDate>>((acc, item) => {
         if (acc[item.category]) {
           acc[item.category].amount += item.amount;
         } else {
@@ -90,7 +91,7 @@ export default function WeekGraph({ weekExpenses }: GraphProp) {
 
     //Graphing the pie
     g.selectAll('path')
-      .data(pie(data))
+      .data(pie(dataResult))
       .join('path')
       .attr('d', arc as any)
       .attr('fill', d => color(d.data.amount.toString()))
@@ -129,7 +130,7 @@ export default function WeekGraph({ weekExpenses }: GraphProp) {
 
     const legendItems = legend
       .selectAll('.legend-item')
-      .data(data)
+      .data(dataResult)
       .enter()
       .append('g')
       .attr('class', 'legend-item')
@@ -153,10 +154,14 @@ export default function WeekGraph({ weekExpenses }: GraphProp) {
         tooltip.remove();
       };
 
-  }, [dimensions, weekExpenses])
+  }, [dimensions, data])
 
   return (
+    <>
+    <div className={style.pieGraph}>
       <svg ref={chartRef}></svg>
+    </div>
+    </>
   )
 
 };

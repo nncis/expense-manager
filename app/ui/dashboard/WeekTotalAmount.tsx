@@ -5,8 +5,6 @@ export default async function WeekTotalAmount(){
 
   const totalWeekAmount = await getTotalWeekAmountExpenses();
 
-  console.log(totalWeekAmount)
-
   return(
     <div className={style.totalAmountBox}>
       <h4>Total Week: </h4>
