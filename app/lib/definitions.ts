@@ -40,3 +40,13 @@ export type ExpenseAmountByDate = {
   category: string;
   amount: number;
 }
+
+export type ExpenseTotalAmountPerMonth = {
+  month: string;
+  total: number;
+}
+
+export type MonthlyTotal = {
+  month: string;
+  total: number;
+};

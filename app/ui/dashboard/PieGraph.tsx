@@ -28,17 +28,22 @@ export default function WeekGraph({ data }: GraphProp) {
 
 
   useEffect(() => {
+    
+    if(!chartRef.current) return;
 
+    //SVG config
+    const svg = d3.select(chartRef.current);
     const { width, height } = dimensions;
     const margin = { top: 10, right: 10, bottom: 10, left: 10 };
-
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
-
-    const radius = Math.min(innerWidth, innerHeight) / 2;
-
+    const radius = Math.min(width, height) / 3;
     const color = d3.scaleOrdinal(d3.schemePastel1);
     
+    //Clean SVG
+    svg.selectAll("*").remove();
+
+    //Pie Graph config
     const arc = d3.arc<d3.PieArcDatum<ExpenseAmountByDate>>()
       .innerRadius(radius * 0.5)
       .outerRadius(radius);
@@ -46,16 +51,15 @@ export default function WeekGraph({ data }: GraphProp) {
     const pie = d3.pie<ExpenseAmountByDate>()
       .value(d => d.amount);
 
-    if (!chartRef.current) return;
+    //Create a g element for the Pie Graph
+    const g = svg
+      .append('g')
+      .attr('transform', `translate(${(innerWidth / 3.5)} , ${(innerHeight / 2)})`)
+      .attr('viewBox', `0 0 ${width} ${height}`) // Relativo a un sistema de coordenadas base
+      .attr('preserveAspectRatio', 'xMidYMid meet') // Mantiene la relación de aspecto
+      .classed('responsive', true);
 
-    const svg = d3.select(chartRef.current);
-    svg.selectAll("*").remove(); //
-    
-
-    //sum the total amount for the same category, 
-    //ex: category: {Category: "Greengrocery", amount: 3000}, {Category: "Greengrocery", amount: 5000}
-    //result = {Category: "Greengrocery", amount: 8000};
-
+    // Agrupar datos por categoría y sumar los montos
     const dataResult: ExpenseAmountByDate[] = Object.values(
       data.reduce<Record<string, ExpenseAmountByDate>>((acc, item) => {
         if (acc[item.category]) {
@@ -67,6 +71,7 @@ export default function WeekGraph({ data }: GraphProp) {
       }, {})
     )
 
+    //Tooltip
     const tooltip = d3.select('body')
       .append('div')
       .attr('id', 'tooltip')
@@ -78,55 +83,48 @@ export default function WeekGraph({ data }: GraphProp) {
       .style('pointer-events', 'none')
       .style('opacity', 0);
 
-
-    //SVG
-    const g = svg
-      .append('g')
-      .attr('transform', `translate(${(width / 2)} , ${(height / 2)})`)
-      .attr('viewBox', `0 0 ${width} ${height}`) // Relativo a un sistema de coordenadas base
-      .attr('preserveAspectRatio', 'xMidYMid meet') // Mantiene la relación de aspecto
-      .classed('responsive', true);
-      ;
-
-
     //Graphing the pie
-    g.selectAll('path')
-      .data(pie(dataResult))
-      .join('path')
-      .attr('d', arc as any)
-      .attr('fill', d => color(d.data.amount.toString()))
-      .attr('stroke', '#fff')
-      .attr('stroke-width', 2)
-      .on('mouseover', function (event, d) {
-        tooltip
-          .style('left', `${event.pageX + 10}px`)
-          .style('top', `${event.pageY - 20}px`)
-          .style('opacity', 1)
-          .html(`
+    const arcs = g.selectAll('path')
+    .data(pie(dataResult))
+    .enter()
+    .append('path')
+    .attr('fill', d => color(d.data.category))
+    .attr('stroke', 'white')
+    .attr('stroke-width', 2)
+    .each(function (this: SVGPathElement, d) {
+      (this as any)._current = { ...d, startAngle: 0, endAngle: 0 };
+    });
+
+    arcs.transition()
+    .duration(1000)
+    .attrTween("d", function (this: SVGPathElement & { _current?: d3.PieArcDatum<ExpenseAmountByDate> }, d) {
+      if (!this._current) this._current = d; // Inicializa _current si no existe
+      const interpolate = d3.interpolate(this._current, d);
+      this._current = d; // Guarda el nuevo estado
+      return function (t) {
+        return arc(interpolate(t))!;
+      };
+    });
+
+    //draw tooltip
+    arcs.on('mouseover', function (event, d) {
+      tooltip
+        .style('left', `${event.pageX + 10}px`)
+        .style('top', `${event.pageY - 20}px`)
+        .style('opacity', 1)
+        .html(`
           <strong>${d.data.category}</strong><br />
           Valor: $${d.data.amount}
         `);
-      })
-      .on('mouseout', () => {
-        tooltip.style('opacity', 0);
-      });
-    ;
-    
-    //Text
-
-    // svg.selectAll("text")
-    //   .data(pie(data))
-    //   .enter()
-    //   .append("text")
-    //   .attr("transform", d => `translate(${arc.centroid(d)})`)
-    //   .attr("text-anchor", "middle")
-    //   .text(d => d.data.amount);
+    })
+    .on('mouseout', () => {
+      tooltip.style('opacity', 0);
+    });
 
     //Legend
-
     const legend = svg
       .append('g')
-      .attr('transform', `translate(${(width / 3)}, ${(height / 1)})`);
+      .attr('transform', `translate(${(innerWidth / 1.5)}, ${(innerHeight / 4)})`);
 
     const legendItems = legend
       .selectAll('.legend-item')
@@ -136,18 +134,19 @@ export default function WeekGraph({ data }: GraphProp) {
       .attr('class', 'legend-item')
       .attr('transform', (_, i) => `translate(0, ${i * 25})`);
     
+    //draw legend
     legendItems
       .append('rect')
       .attr('width', 20)
       .attr('height', 20)
-      .attr('fill', d => color(d.amount.toString()));
+      .attr('fill', d => color(d.category.toString()));
 
     legendItems
       .append('text')
       .attr('x', 25)
       .attr('y', 12)
       .text(d => d.category)
-      .style('font-size', '1.2rem')
+      .style('font-size', '1.1rem')
       .style('alignment-baseline', 'middle');
 
       return () => {
@@ -158,10 +157,9 @@ export default function WeekGraph({ data }: GraphProp) {
 
   return (
     <>
-    <div className={style.pieGraph}>
-      <svg ref={chartRef}></svg>
+    <div className={style.SVGpieGraphContainer}>
+      <svg className={style.SVGpieChart} ref={chartRef}></svg>
     </div>
     </>
   )
-
 };

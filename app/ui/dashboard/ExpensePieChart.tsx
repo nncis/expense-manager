@@ -29,10 +29,11 @@ export default  function ExpensePieChart({
     <div className={style.expensePieChart}>
       <PieGraph data={data}/>
       <div className={style.selectChart}>
+        
         <CalendarIcon className={style.calendarIcon}/>
-        <select onChange={handleViewChange} defaultValue={view}>
-          <option value="month">Monthly</option>
-          <option value="week">Weekly</option>
+        <select className={style.selectWeekMonth} onChange={handleViewChange} defaultValue={view}>
+          <option value="month">Last month</option>
+          <option value="week">Last week</option>
         </select>
       </div>
     </div>

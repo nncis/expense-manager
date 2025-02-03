@@ -1,5 +1,5 @@
 import { sql } from '@vercel/postgres';
-import { Expense, ExpenseForm, ExpenseByDate } from '@/lib/definitions';
+import { Expense, ExpenseForm, ExpenseByDate, ExpenseTotalAmountPerMonth} from '@/lib/definitions';
 import { auth } from '../../auth';
 
 const ITEMS_PER_PAGE = 6;
@@ -261,9 +261,77 @@ export async function getTotalMonthAmountExpenses() {
     SELECT max_date FROM last_date
     );
     `
+    
     return data.rows[0].total_amount / 100
   } catch (error) {
     console.error('Database Error:');
     throw new Error('Failed to fetch total month amount expenses');
+  }
+}
+
+export async function getAnnualExpenses(year: string): Promise<ExpenseTotalAmountPerMonth[]> {
+  const session = await auth();
+  const user = session?.user;
+
+  if (!user) {
+    throw new Error('User is not authenticated');
+  }
+
+  try {
+    const data = await sql<ExpenseTotalAmountPerMonth>`
+      SELECT 
+        TO_CHAR(expenses.date, 'Mon') AS month, 
+        SUM(expenses.amount) AS total
+      FROM users
+      INNER JOIN expenses ON users.id = expenses.user_id
+      WHERE 
+        users.email = ${user.email} 
+        AND EXTRACT(YEAR FROM expenses.date) = ${year}
+      GROUP BY month, EXTRACT(MONTH FROM expenses.date)
+      ORDER BY EXTRACT(MONTH FROM expenses.date);
+    `
+
+    if (!data.rows.length) {
+      console.warn('No expenses found for the current year');
+      return [];
+    }
+
+    const convertCentsToDollars = (amountInCents: number) => amountInCents / 100;
+    
+
+    const annualExpenses = data.rows.map((expense) => ({
+      ...expense,
+      total: convertCentsToDollars(expense.total),
+    }));
+
+    return annualExpenses
+
+  } catch(error){
+    console.error('Database Error:');
+    throw new Error('Failed to fetch total annual expenses');
+  }
+}
+
+export async function getYears(){
+  const session = await auth();
+  const user = session?.user;
+
+  if (!user) {
+    throw new Error('User is not authenticated');
+  }
+
+  try {
+    const data = await sql `
+      SELECT DISTINCT EXTRACT(YEAR FROM expenses.date) AS year
+      FROM users
+      INNER JOIN expenses ON users.id = expenses.user_id
+      WHERE users.email = ${user.email}
+      ORDER BY year;
+    `
+    return data.rows
+    
+  } catch(error){
+    console.error('Database Error:');
+    throw new Error('Failed to fetch expenses years');
   }
 }
