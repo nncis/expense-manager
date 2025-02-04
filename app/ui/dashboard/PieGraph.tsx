@@ -15,9 +15,19 @@ export default function WeekGraph({ data }: GraphProp) {
   const [dimensions, setDimensions] = useState({ width: 600, height: 600 });
 
   useEffect(() => {
+
+    let prevWidth = chartRef.current?.parentElement?.clientWidth || 600;
+
     const handleResize = () => {
       const containerWidth = chartRef.current?.parentElement?.clientWidth || 600;
+      const screenWidth = window.innerWidth; // Obtener el ancho de la pantalla
+      
       setDimensions({ width: containerWidth, height: containerWidth * 0.75 }); // Relación de aspecto 4:3
+      if (containerWidth !== prevWidth && screenWidth < 768) {  
+        prevWidth = containerWidth;
+        setDimensions({ width: containerWidth, height: containerWidth * 0.75 });
+      }
+
     };
 
     window.addEventListener('resize', handleResize);
@@ -94,7 +104,8 @@ export default function WeekGraph({ data }: GraphProp) {
     .each(function (this: SVGPathElement, d) {
       (this as any)._current = { ...d, startAngle: 0, endAngle: 0 };
     });
-
+    
+    
     arcs.transition()
     .duration(1000)
     .attrTween("d", function (this: SVGPathElement & { _current?: d3.PieArcDatum<ExpenseAmountByDate> }, d) {
@@ -120,7 +131,7 @@ export default function WeekGraph({ data }: GraphProp) {
     .on('mouseout', () => {
       tooltip.style('opacity', 0);
     });
-
+  
     //Legend
     const legend = svg
       .append('g')
