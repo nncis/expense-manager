@@ -12,9 +12,11 @@ interface GraphProp {
 export default function YearGraph({ data }: GraphProp) {
   const chartRef = useRef<SVGSVGElement | null>(null);
   const [dimensions, setDimensions] = useState({ width: 600, height: 600 });
-
+  
   useEffect(() => {
     const handleResize = () => {
+      const screenWidth = window.innerWidth; // Ancho de la pantalla
+      console.log(screenWidth,'screenwidth')
       const containerWidth = chartRef.current?.parentElement?.clientWidth || 600;
       setDimensions({ width: containerWidth, height: containerWidth * 0.75 }); // Relación de aspecto 4:3
     };
@@ -27,22 +29,18 @@ export default function YearGraph({ data }: GraphProp) {
 
 
   useEffect(() => {
-
     if (!chartRef.current || data.length === 0) return;
-
+    
     const yearMonths = [
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ];
-
+    
     //SVG config
     const { width, height } = dimensions;
     const margin = { top: 20, right: 10, bottom: 30, left: 40 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
-
-
-
 
     //Scales
     const xScale = d3.scaleBand()
@@ -117,13 +115,12 @@ export default function YearGraph({ data }: GraphProp) {
   
       tooltip.style("opacity", 1)
         .html(`<strong>${data.month}</strong><br>$${data.total}`)
-        .style("left", `${event.pageX + 15}px`)  // Posición cercana al mouse (X)
-        .style("top", `${event.pageY - 30}px`);  // Posición cercana al mouse (Y)
+        .style("left", `${event.pageX + 15}px`)
+        .style("top", `${event.pageY - 30}px`);
     })
-    .on("mouseout", () => tooltip.style("opacity", 0)); // Ocultar tooltip al salir
+    .on("mouseout", () => tooltip.style("opacity", 0)); 
   
-
-  }, [data, dimensions])
+  }, [data])
 
   return (
     <>

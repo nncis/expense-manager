@@ -16,17 +16,9 @@ export default function WeekGraph({ data }: GraphProp) {
 
   useEffect(() => {
 
-    let prevWidth = chartRef.current?.parentElement?.clientWidth || 600;
-
     const handleResize = () => {
       const containerWidth = chartRef.current?.parentElement?.clientWidth || 600;
-      const screenWidth = window.innerWidth; // Obtener el ancho de la pantalla
-      
-      setDimensions({ width: containerWidth, height: containerWidth * 0.75 }); // Relación de aspecto 4:3
-      if (containerWidth !== prevWidth && screenWidth < 768) {  
-        prevWidth = containerWidth;
-        setDimensions({ width: containerWidth, height: containerWidth * 0.75 });
-      }
+      setDimensions({ width: containerWidth, height: containerWidth * 0.75 });
 
     };
 
@@ -38,7 +30,7 @@ export default function WeekGraph({ data }: GraphProp) {
 
 
   useEffect(() => {
-    
+  
     if(!chartRef.current) return;
 
     //SVG config
@@ -164,7 +156,7 @@ export default function WeekGraph({ data }: GraphProp) {
         tooltip.remove();
       };
 
-  }, [dimensions, data])
+  }, [ data])
 
   return (
     <>
