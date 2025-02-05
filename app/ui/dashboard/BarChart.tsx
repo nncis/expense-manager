@@ -11,14 +11,14 @@ interface GraphProp {
 
 export default function YearGraph({ data }: GraphProp) {
   const chartRef = useRef<SVGSVGElement | null>(null);
-  const [dimensions, setDimensions] = useState({ width: 600, height: 600 });
+  const [dimensions, setDimensions] = useState({ width: 326, height: 244 });
   
   useEffect(() => {
     const handleResize = () => {
-      const screenWidth = window.innerWidth; // Ancho de la pantalla
-      console.log(screenWidth,'screenwidth')
-      const containerWidth = chartRef.current?.parentElement?.clientWidth || 600;
+      const containerWidth = chartRef.current?.parentElement?.clientWidth || 200;
+
       setDimensions({ width: containerWidth, height: containerWidth * 0.75 }); // Relación de aspecto 4:3
+      
     };
 
     window.addEventListener('resize', handleResize);
@@ -35,12 +35,15 @@ export default function YearGraph({ data }: GraphProp) {
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ];
-    
     //SVG config
     const { width, height } = dimensions;
     const margin = { top: 20, right: 10, bottom: 30, left: 40 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
+
+    //Select and clean the SVG
+    const svg = d3.select(chartRef.current);
+    svg.selectAll("*").remove();
 
     //Scales
     const xScale = d3.scaleBand()
@@ -62,10 +65,6 @@ export default function YearGraph({ data }: GraphProp) {
       if (num >= 1_000) return `${num / 1_000}k`;         // 100,000 → "100k"
       return `${num}`;  // Convertir a string explícitamente
     });
-
-    // Selección y limpieza del SVG
-    const svg = d3.select(chartRef.current);
-    svg.selectAll("*").remove();
 
     //Tooltip
     d3.select("#tooltip").remove();

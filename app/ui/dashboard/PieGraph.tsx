@@ -14,15 +14,19 @@ export default function WeekGraph({ data }: GraphProp) {
   const chartRef = useRef<SVGSVGElement | null>(null);
   const [dimensions, setDimensions] = useState({ width: 600, height: 600 });
 
+  const prevWidth = useRef(chartRef.current?.parentElement?.clientWidth || 600);
+
   useEffect(() => {
 
     const handleResize = () => {
+      const screenWidth = window.innerWidth;
       const containerWidth = chartRef.current?.parentElement?.clientWidth || 600;
-      setDimensions({ width: containerWidth, height: containerWidth * 0.75 });
 
+        setDimensions({ width: containerWidth, height: containerWidth * 0.75 });
     };
 
     window.addEventListener('resize', handleResize);
+
     handleResize(); // Llama al handler al montar el componente
 
     return () => window.removeEventListener('resize', handleResize);
@@ -156,7 +160,7 @@ export default function WeekGraph({ data }: GraphProp) {
         tooltip.remove();
       };
 
-  }, [ data])
+  }, [dimensions, data])
 
   return (
     <>
