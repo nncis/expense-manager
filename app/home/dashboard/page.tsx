@@ -4,8 +4,10 @@ import style from '@/ui/dashboard.module.css';
 import WeekTotalAmount from '@/ui/dashboard/WeekTotalAmount';
 import ExpensePieChart from '@/ui/dashboard/ExpensePieChart';
 import AnnualChartExpense from '@/ui/dashboard/AnnualChartExpense';
-
+import { AnnualChartSkeleton } from '@/ui/skeletons';
+import { Suspense } from 'react';
 import { getWeekExpenses, getMonthExpenses, getAnnualExpenses, getYears } from "@/lib/data";
+
 
 export default async function Page({
    searchParams 
@@ -20,18 +22,22 @@ export default async function Page({
   const view =  (await searchParams)?.view || "month";
   const weekOrMonthData = view === 'week' ? await getWeekExpenses() : await getMonthExpenses(); 
 
+ 
   //Data for  Graph by years
   const yearsData = await getYears(); //get years from expenses to make the <select> options
   const selectYears = yearsData.map(year => year.year);
 
-  const year = (await searchParams)?.year || selectYears[selectYears.length - 1]
-  const annualExpensesData = await getAnnualExpenses(year);
-
   return (
     <div className={style.dashboard}>
         <WeekTotalAmount />
-      <AnnualChartExpense data={annualExpensesData} year={year} selectYears={selectYears} />
-      <ExpensePieChart data={weekOrMonthData} view={view}/>
+
+      <Suspense fallback={<AnnualChartSkeleton />}>
+        <AnnualChartExpense selectYears={selectYears}/>
+      </Suspense>  
+      <Suspense fallback={<p>loading..</p>}>
+        <ExpensePieChart />
+
+      </Suspense>
     </div>
   )
 }

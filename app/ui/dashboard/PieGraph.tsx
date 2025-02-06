@@ -12,17 +12,14 @@ interface GraphProp {
 export default function WeekGraph({ data }: GraphProp) {
 
   const chartRef = useRef<SVGSVGElement | null>(null);
-  const [dimensions, setDimensions] = useState({ width: 600, height: 600 });
-
-  const prevWidth = useRef(chartRef.current?.parentElement?.clientWidth || 600);
+  const [dimensions, setDimensions] = useState( {width: 326, height: 244 });
 
   useEffect(() => {
 
     const handleResize = () => {
-      const screenWidth = window.innerWidth;
-      const containerWidth = chartRef.current?.parentElement?.clientWidth || 600;
+      const containerWidth = chartRef.current?.parentElement?.clientWidth || 326;
 
-        setDimensions({ width: containerWidth, height: containerWidth * 0.75 });
+      setDimensions({ width: containerWidth, height: containerWidth * 0.75 });
     };
 
     window.addEventListener('resize', handleResize);
@@ -160,7 +157,7 @@ export default function WeekGraph({ data }: GraphProp) {
         tooltip.remove();
       };
 
-  }, [dimensions, data])
+  }, [data])
 
   return (
     <>

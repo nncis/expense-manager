@@ -1,5 +1,5 @@
 import { getWeekExpenses } from "@/lib/data";
-import { auth } from "../../../auth";
+import { auth } from "./auth";
 
 export default async function handler(req: { method: string; }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { amount: number; category: string; date: Date; }[]): any; new(): any; }; }; }) {
   if (req.method !== 'GET') {

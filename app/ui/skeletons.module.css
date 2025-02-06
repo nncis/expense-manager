@@ -1,0 +1,14 @@
+@keyframes loading {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.barChartSkeleton {
+  padding: 1rem;
+  width: 40rem;
+  height: 30rem;
+  border-radius: 10px;
+  margin: 1rem 0;
+  animation: loading 1.5s infinite linear;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+}
