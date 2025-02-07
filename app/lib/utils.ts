@@ -47,3 +47,6 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
   ];
 };
 
+export const numberFormatter = (amount: number) => {
+  return amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}

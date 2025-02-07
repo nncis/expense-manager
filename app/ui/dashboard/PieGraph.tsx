@@ -4,6 +4,7 @@ import * as d3 from "d3";
 import React, { useEffect, useRef, useState } from 'react';
 import { ExpenseByDate, ExpenseAmountByDate } from '@/lib/definitions';
 import style from '@/ui/dashboard.module.css';
+import { numberFormatter } from '@/lib/utils';
 
 interface GraphProp {
   data: ExpenseByDate[];
@@ -118,7 +119,7 @@ export default function WeekGraph({ data }: GraphProp) {
         .style('opacity', 1)
         .html(`
           <strong>${d.data.category}</strong><br />
-          Valor: $${d.data.amount}
+          Valor: $${numberFormatter(d.data.amount)}
         `);
     })
     .on('mouseout', () => {
@@ -162,7 +163,10 @@ export default function WeekGraph({ data }: GraphProp) {
   return (
     <>
     <div className={style.SVGpieGraphContainer}>
-      <svg className={style.SVGpieChart} ref={chartRef}></svg>
+      <svg 
+        className={style.SVGpieChart} 
+        ref={chartRef}
+        ></svg>
     </div>
     </>
   )

@@ -6,6 +6,7 @@ import { updateExpense, State } from '@/lib/actions';
 import Link from 'next/link';
 import Button from '../record/submitBtn';
 import { useActionState } from 'react';
+import { categories } from '@/lib/definitions';
 
 export default function EditForm(
   { expense, id }: { expense: { category: string, amount: number, date: string, user_id: string }, id: string }) {
@@ -19,9 +20,6 @@ export default function EditForm(
   const initialState: State = { message: null, errors: {} };
   const updateExpenseWithId = updateExpense.bind(null, id);
   const [state, formAction] = useActionState(updateExpenseWithId, initialState)
-
-  //set category options
-  const categories: string[] = ["Greengrocery", "Bakery", "Grocery", "Butcher Shop", "Barber Shop", "Clothing Store"];
 
   const handleDateChange = (event: { target: { value: SetStateAction<string>; }; }) => {
     setSelectedDate(event.target.value);

@@ -2,6 +2,7 @@ import { fetchFilteredExpenses } from "@/lib/data";
 import { formatDateToLocal } from '@/lib/utils';
 import style from '@/ui/expense.module.css';
 import { UpdateExpense, DeleteExpense } from '@/ui/expense/buttons';
+import { numberFormatter } from '@/lib/utils';
 
 export default async function Table (
   {
@@ -31,7 +32,7 @@ const expenses = await fetchFilteredExpenses(query, currentPage);
           {expenses?.map((expense, index) => 
             <tr key={index}>
               <td>{expense.category}</td>
-              <td>$ {expense.amount / 100}</td>
+              <td>${numberFormatter(expense.amount / 100)}</td>
               <td>{formatDateToLocal(expense.date)}</td>
               <td>
                 <div className={style.expenseButtons}>
@@ -48,7 +49,7 @@ const expenses = await fetchFilteredExpenses(query, currentPage);
             <div className={style.expenseMobile} key={index}>
               <div className={style.expenseMobileContent}>
                 <h3>{expense.category}</h3>
-                <p>${expense.amount / 100}</p>
+                <p>${numberFormatter(expense.amount / 100)}</p>
                 <p>{formatDateToLocal(expense.date)}</p>
               </div>
               <div className={style.expenseButtons}>

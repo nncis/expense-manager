@@ -1,5 +1,6 @@
 import { getTotalWeekAmountExpenses } from "@/lib/data";
 import style from '@/ui/dashboard.module.css';
+import { numberFormatter } from '@/lib/utils';
 
 export default async function WeekTotalAmount(){
 
@@ -8,7 +9,7 @@ export default async function WeekTotalAmount(){
   return(
     <div className={style.totalAmountBox}>
       <h4>Total Week: </h4>
-      <p>${totalWeekAmount}</p>
+      <p>${numberFormatter(totalWeekAmount)}</p>
     </div>
   )
 }

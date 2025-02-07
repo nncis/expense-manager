@@ -27,8 +27,8 @@ export type UserSession = {
 };
 
 export const categories: string[] = [
-  "Greengrocery", "Bakery", "Grocery", "Butcher Shop", "Barber Shop", "Clothing Store"
-];
+  "Greengrocery", "Bakery", "Meat", "Transportation", "Barber Shop", "Clothing Store", "Services", "Supermarket", "Vacations", "Forniture" ,"Electronic", "Others"
+].sort();
 
 export type ExpenseByDate = {
   category: string;

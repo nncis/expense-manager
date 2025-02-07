@@ -4,6 +4,7 @@ import * as d3 from "d3";
 import React, { useEffect, useRef, useState } from 'react';
 import { ExpenseTotalAmountPerMonth } from '@/lib/definitions';
 import style from '@/ui/dashboard.module.css';
+import { numberFormatter } from '@/lib/utils';
 
 interface GraphProp {
   data: ExpenseTotalAmountPerMonth[];
@@ -13,12 +14,10 @@ export default function YearGraph({ data }: GraphProp) {
   const chartRef = useRef<SVGSVGElement | null>(null);
   const [dimensions, setDimensions] = useState({ width: 326, height: 244 });
   
-  useEffect(() => {
+  useEffect(() => {  
     const handleResize = () => {
-      const containerWidth = chartRef.current?.parentElement?.clientWidth || 200;
-
-      setDimensions({ width: containerWidth, height: containerWidth * 0.75 }); // Relación de aspecto 4:3
-      
+      const containerWidth = chartRef.current?.parentElement?.clientWidth || 326;
+      setDimensions({ width: containerWidth, height: containerWidth * 0.75 }); // Relación de aspecto 4:
     };
 
     window.addEventListener('resize', handleResize);
@@ -70,7 +69,7 @@ export default function YearGraph({ data }: GraphProp) {
     d3.select("#tooltip").remove();
     const tooltip = d3.select("body")
       .append("div")
-      .attr("id", "tooltip")
+      .attr("id", "bartooltip")
       .style("position", "absolute")
       .style("background", "rgba(0, 0, 0, 0.7)")
       .style("color", "#fff")
@@ -111,10 +110,10 @@ export default function YearGraph({ data }: GraphProp) {
     svg.selectAll("rect")
     .on("mouseover", function (event, d) {
       const data = d as ExpenseTotalAmountPerMonth;
-  
+
       tooltip.style("opacity", 1)
-        .html(`<strong>${data.month}</strong><br>$${data.total}`)
-        .style("left", `${event.pageX + 15}px`)
+        .html(`<strong>${data.month}</strong><br>$${numberFormatter(data.total)}`)
+        .style("left", `${event.pageX}px`)
         .style("top", `${event.pageY - 30}px`);
     })
     .on("mouseout", () => tooltip.style("opacity", 0)); 
